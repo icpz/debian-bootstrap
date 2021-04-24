@@ -27,7 +27,7 @@ install_dotfile() {
     local _orig="$1"
     local _dest="$2"
     bs_log "installing ${_orig} to ~/${_dest}"
-    cp "${BASEDIR}/dotfiles/${_orig}" "~/${_dest}"
+    cp "${BASEDIR}/dotfiles/${_orig}" ~/"${_dest}"
 }
 
 satisfy_requirements() {
