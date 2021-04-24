@@ -8,7 +8,8 @@ bs_log() {
 }
 
 check_root() {
-    if [ "$UID" -ne 0 ]; then
+    local _uid="$(id -u)"
+    if [ "$_uid" -ne 0 ]; then
         bs_log "the script MUST be run as root"
         exit -1
     fi
@@ -16,7 +17,7 @@ check_root() {
 
 check_cmd() {
     local _cmd="$1"
-    if ! command -v "${_cmd}" &>/dev/null; then
+    if ! command -v "${_cmd}" > /dev/null 2>&1; then
         bs_log "command ${_cmd} not found"
         exit -1
     fi
