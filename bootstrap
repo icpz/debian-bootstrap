@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+
+REPO_URL="https://github.com/icpz/debian-bootstrap"
+BASEDIR=""
+
+bs_log() {
+    echo "$@"
+}
+
+check_root() {
+    if [ "$UID" -ne 0 ]; then
+        bs_log "the script MUST be run as root"
+        exit -1
+    fi
+}
+
+check_cmd() {
+    local _cmd="$1"
+    if ! command -v "${_cmd}" &>/dev/null; then
+        bs_log "command ${_cmd} not found"
+        exit -1
+    fi
+}
+
+# install_dotfile orig dest
+install_dotfile() {
+    local _orig="$1"
+    local _dest="$2"
+    bs_log "installing ${_orig} to ~/${_dest}"
+    cp "${BASEDIR}/dotfiles/${_orig}" "~/${_dest}"
+}
+
+satisfy_requirements() {
+    bs_log "installing requirements..."
+    apt update
+    apt install -y curl git zsh tmux vim-nox htop rsync build-essential python3 python3-pip cmake
+
+    BASEDIR="$(mktemp -d)"
+    if [ -z "$BASEDIR" ]; then
+        bs_log "failed to create temp directory"
+        exit -1
+    fi
+    bs_log "using $BASEDIR as temp directory"
+
+    bs_log "clone repo into $BASEDIR"
+    git clone "$REPO_URL" "$BASEDIR"
+}
+
+install_omz() {
+    bs_log "installing oh-my-zsh..."
+
+    if [ -d ~/.oh-my-zsh ]; then
+        bs_log "existing ~/.oh-my-zsh found, assume installed"
+        return 0
+    fi
+
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    install_dotfile zshrc .zshrc
+    bs_log "done"
+}
+
+install_vim_plug() {
+    bs_log "installing vim-plug..."
+    curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    install_dotfile vimrc .vimrc
+    install_dotfile ycm_extra_conf.py .vim/.ycm_extra_conf.py
+    bs_log "done"
+}
+
+install_tpm() {
+    bs_log "installing tpm"
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+    install_dotfile tmux.conf .tmux.conf
+    bs_log "done"
+}
+
+cleanup() {
+    bs_log "clean up $BASEDIR"
+    rm -rf "$BASEDIR"
+}
+
+check_root
+check_cmd apt
+check_cmd mktemp
+
+satisfy_requirements
+install_omz
+install_vim_plug
+install_tpm
+
+cleanup
+
+bs_log "done"
+

@@ -1,0 +1,103 @@
+set nocompatible
+
+call plug#begin('~/.vim/plugged')
+
+Plug 'junegunn/vim-plug'
+Plug 'tpope/vim-sensible'
+Plug 'ycm-core/YouCompleteMe', { 'do': 'python3 install.py --clangd-completer --go-completer' }
+Plug 'lifepillar/vim-solarized8'
+Plug 'arcticicestudio/nord-vim'
+Plug 'rakr/vim-one'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'skywind3000/asyncrun.vim'
+Plug 'w0rp/ale'
+Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+Plug 'Shougo/echodoc.vim'
+Plug 'Peaches491/vim-glog-syntax'
+Plug 'rdnetto/YCM-Generator', { 'branch': 'stable'}
+
+call plug#load('vim-sensible')
+call plug#end()
+
+let c_no_curly_error=1
+let g:cpp_class_scope_highlight = 1
+let g:cpp_member_variable_highlight = 1
+let g:cpp_class_decl_highlight = 1
+
+let g:ycm_clangd_uses_ycmd_caching = 0
+let g:ycm_clangd_args = ['-log=verbose', '-pretty', '--header-insertion=never', '--include-ineligible-results']
+let g:ycm_add_preview_to_completeopt = 0
+let g:ycm_show_diagnostics_ui = 0
+let g:ycm_min_num_identifier_candidate_chars = 2
+let g:ycm_collect_identifiers_from_comments_and_strings = 1
+let g:ycm_complete_in_strings = 1
+let g:ycm_complete_in_comments = 1
+let g:ycm_key_invoke_completion = '<F9>'
+let g:ycm_global_ycm_extra_conf = $HOME . "/.vim/.ycm_extra_conf.py"
+let g:ycm_seed_identifiers_with_syntax = 1
+let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_echo_current_diagnostic = 0
+let g:ycm_semantic_triggers =  { 'c,cpp,python,java,go,erlang,perl,rust': ['re!\w{2}'],
+                               \ 'cs,lua,javascript': ['re!\w{2}'],
+                               \ }
+
+let g:airline_theme='solarized'
+
+let g:one_allow_italics = 1
+
+let g:ale_enabled = 0
+let ale_c_family_options = ' -Wall -I/usr/local/opt/openssl/include/'
+let g:ale_c_clang_options = '--std=c99' . ale_c_family_options
+let g:ale_cpp_clang_options = '--std=c++14' . ale_c_family_options
+let g:ale_cpp_clang_executable = '/usr/local/opt/llvm/bin/clang++'
+let g:ale_linters = { 'cpp': [ 'clang' ], 'c': [ 'clang' ] }
+
+let g:echodoc_enable_at_startup = 1
+
+let g:Lf_StlColorscheme = 'powerline'
+let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2" }
+
+"let g:loaded_matchparen=1
+
+set lazyredraw
+set ttyfast
+
+set term=xterm-256color
+set termguicolors
+"let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+"let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
+set expandtab
+set number
+set hlsearch
+set autochdir
+set cursorline
+set cursorcolumn
+set foldmethod=indent
+set nofoldenable
+set list
+set listchars+=eol:$
+set showcmd
+set noshowmode
+set background=dark
+colorscheme solarized8
+set completeopt=menu,menuone
+set tags=./.tags;,.tags
+
+let &t_ZH="\e[3m"
+let &t_ZR="\e[23m"
+highlight Comment cterm=italic
+
+noremap <leader>F :LeaderfFunctionAll!<cr>
+noremap <leader>r :copen<cr>:wincmd p<cr>:AsyncRun! 
+noremap <leader>lf :Leaderf
+
+if has('linux')
+    set t_ut=
+    set mouse=
+endif
+
