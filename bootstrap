@@ -46,9 +46,16 @@ satisfy_requirements() {
         exit -1
     fi
     bs_log "using $BASEDIR as temp directory"
+}
 
+download_dotfiles() {
     bs_log "clone repo into $BASEDIR"
     git clone "$REPO_URL" "$BASEDIR"
+
+    if [ "$?" -ne 0 ]; then
+        bs_log "failed to clone repo ${REPO_URL}"
+        exit -1
+    fi
 }
 
 install_omz() {
@@ -89,6 +96,8 @@ check_cmd apt
 check_cmd mktemp
 
 satisfy_requirements
+download_dotfiles
+
 install_omz
 install_vim_plug
 install_tpm
