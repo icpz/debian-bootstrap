@@ -28,7 +28,7 @@ install_dotfile() {
     local _orig="$1"
     local _dest="$2"
     bs_log "installing ${_orig} to ~/${_dest}"
-    cp "${BASEDIR}/dotfiles/${_orig}" ~/"${_dest}"
+    install -D -m 644 "${BASEDIR}/dotfiles/${_orig}" ~/"${_dest}"
 }
 
 satisfy_requirements() {
@@ -76,7 +76,8 @@ install_vim_plug() {
     bs_log "installing vim-plug..."
     curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     install_dotfile vimrc .vimrc
-    install_dotfile ycm_extra_conf.py .vim/.ycm_extra_conf.py
+    install_dotfile vim/ycm_extra_conf.py .vim/.ycm_extra_conf.py
+    install_dotfile vim/go.vim .vim/ftplugin/go.vim
     bs_log "done"
 }
 
@@ -95,6 +96,7 @@ cleanup() {
 check_root
 check_cmd apt
 check_cmd mktemp
+check_cmd install
 
 satisfy_requirements
 download_dotfiles
