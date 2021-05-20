@@ -34,7 +34,7 @@ install_dotfile() {
 satisfy_requirements() {
     bs_log "installing requirements..."
     apt update
-    apt install -y curl git zsh tmux vim-nox htop rsync build-essential python3 python3-pip cmake
+    apt install -y curl git zsh tmux vim-nox htop rsync build-essential python3 python3-pip cmake sudo
 
     if [ "$?" -ne 0 ]; then
         bs_log "failed to call apt install"
