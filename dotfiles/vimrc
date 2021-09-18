@@ -95,6 +95,12 @@ highlight Comment cterm=italic
 noremap <leader>F :LeaderfFunctionAll!<cr>
 noremap <leader>r :copen<cr>:wincmd p<cr>:AsyncRun! 
 noremap <leader>lf :Leaderf
+nnoremap <leader>jd :YcmCompleter GoTo<cr>
+nnoremap <leader>jr :YcmCompleter GoToReferences<cr>
+nnoremap <leader>ji :YcmCompleter GoToImplementation<cr>
+nnoremap <leader>js :YcmCompleter GoToSymbol
+nnoremap <leader>jt :YcmCompleter GoToType<cr>
+nnoremap <leader>gt :YcmCompleter GetType<cr>
 
 if has('linux')
     set t_ut=
